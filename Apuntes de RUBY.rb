@@ -137,3 +137,97 @@ end
 
 #> (1040 - 1710).abs / 2
 #=> 335
+
+# 7 - DELEGAR una responsabilidad. En el ejercicio anterior vimos que un objeto (en ese caso, Pepita) le puede enviar mensajes a otro que conozca (en ese caso, ciudades como Obera o BuenosAires):
+
+module Pepita
+  # ...etc...
+
+  def self.volar_hacia!(destino)
+    @energia -= (@ciudad.kilometro - destino.kilometro).abs / 2
+    @ciudad = destino
+  end
+end
+
+# Esto se conoce como delegar una responsabilidad, o simplemente, delegar: la responsabilidad de saber en qué kilómetro se encuentra es de la ciudad, y no de Pepita.
+
+# A veces nos va a pasar que un objeto tiene un método muy complejo, y nos gustaría subdividirlo en problemas más chicos que el mismo objeto puede resolver. Pero, ¿cómo se envía un objeto mensajes a sí mismo?
+
+# Un objeto puede enviarse un mensaje a sí mismo fácilmente usando self como receptor del mensaje.
+
+module Pepita
+  # ...etc...
+
+  def self.volar_hacia!(destino)
+    self.gastar_energia! destino #¡Ojo! No hicimos Pepita.gastar_energia!(destino)
+    @ciudad = destino
+  end
+
+  def self.gastar_energia!(destino)
+    @energia -= (@ciudad.kilometro - destino.kilometro).abs / 2
+  end
+end
+
+# 8 - CONDICIONAL PARA TRUE O FALSE - Utilizamos al final de declarar el self un signo de interrogacion.
+
+# Ej:  ¿Te acordás de Pepita? Bueno, aunque no lo creas, también cambia de estados de ánimo. En nuestro modelo de Pepita, vamos a representar simplemente dos estados posibles: cuando está débil y cuando está feliz.
+# ¿Y cuándo ocurre eso?
+# Pepita está débil si su energía es menor que 100.
+# Pepita está feliz si su energía es mayor que 1000.
+# Completá los métodos debil? y feliz? de Pepita.
+module Pepita
+  @energia = 1000
+
+  def self.energia
+    @energia 
+  end
+
+  def self.volar_en_circulos!
+    @energia -= 10
+  end
+  
+  def self.comer_alpiste!(gramos)
+    @energia += gramos * 15
+  end  
+
+  def self.debil?
+    @energia<100
+  end
+  
+  def self.feliz?
+    @energia>1000
+  end
+end
+
+# En Ruby, es una convención que los mensajes que devuelven booleanos (o sea, verdadero o falso) terminen con un ?.
+# Intentá respetarla cuando crees tus propios mensajes, acordate que uno de los objetivos del código es comunicar nuestras ideas a otras personas... y las convenciones, muchas veces, nos ayudan con esto.
+
+# 9 - ALTERNATIVA CONDICIONAL utilizamos if en ruby tmb.
+
+ #Ej:
+ module Jose
+  def self.acomodar_habitacion!
+    self.ordenar!
+    if self.tiene_sabanas_sucias?
+      self.cambiar_sabanas!
+    end
+    self.tender_la_cama!
+  end
+end
+
+# 10 - ALTERNATIVA CON ELSE Y TIMES.
+
+# Hay veces que con un if alcanza, pero otras queremos hacer algo si no se cumple una condición. Como ya te podrás imaginar, donde hay un if ¡cerca anda un else!
+
+module Jardinero
+  def self.cuidar!(planta)
+    if planta.necesita_agua?
+      3.times { self.regar! planta }
+    else
+      self.sacar_bichos! planta
+    end
+  end
+end
+# ¿Y ese times qué es?
+
+# Es un mensaje que entienden los números que sirve para ejecutar una porción de código varias veces. En este caso regaríamos 3 veces la planta recibida como argumento.
